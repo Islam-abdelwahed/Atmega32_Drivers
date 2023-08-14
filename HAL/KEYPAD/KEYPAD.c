@@ -1,0 +1,70 @@
+
+
+#include "KEYPAD.h"
+
+
+const uint8 keypadValues[4][4]={
+	{ '7', '8', '9', '/'},
+	{ '4', '5', '6', '*'},
+	{ '1', '2', '3', '-'},
+	{ 'c', '0', '=', '+'}
+};
+
+void KEYPAD_INIT(void){
+	
+	DIO_setPinDir(KEYPAD_COL_PORT,KEYPAD_COL1,DIO_PIN_OUTPUT);
+	DIO_setPinDir(KEYPAD_COL_PORT,KEYPAD_COL2,DIO_PIN_OUTPUT);
+	DIO_setPinDir(KEYPAD_COL_PORT,KEYPAD_COL3,DIO_PIN_OUTPUT);
+	DIO_setPinDir(KEYPAD_COL_PORT,KEYPAD_COL4,DIO_PIN_OUTPUT);
+	
+	DIO_setPinDir(KEYPAD_ROW_PORT,KEYPAD_ROW1,DIO_PIN_INPUT);
+	DIO_setPinDir(KEYPAD_ROW_PORT,KEYPAD_ROW2,DIO_PIN_INPUT);
+	DIO_setPinDir(KEYPAD_ROW_PORT,KEYPAD_ROW3,DIO_PIN_INPUT);
+	DIO_setPinDir(KEYPAD_ROW_PORT,KEYPAD_ROW4,DIO_PIN_INPUT);
+	
+	DIO_setPullUp(KEYPAD_ROW_PORT,KEYPAD_ROW1);
+	DIO_setPullUp(KEYPAD_ROW_PORT,KEYPAD_ROW2);
+	DIO_setPullUp(KEYPAD_ROW_PORT,KEYPAD_ROW3);
+	DIO_setPullUp(KEYPAD_ROW_PORT,KEYPAD_ROW4);
+	
+	DIO_setPinValue(KEYPAD_COL_PORT,KEYPAD_COL1,DIO_PIN_HIGH);
+	DIO_setPinValue(KEYPAD_COL_PORT,KEYPAD_COL2,DIO_PIN_HIGH);
+	DIO_setPinValue(KEYPAD_COL_PORT,KEYPAD_COL3,DIO_PIN_HIGH);
+	DIO_setPinValue(KEYPAD_COL_PORT,KEYPAD_COL4,DIO_PIN_HIGH);
+	
+};
+uint8 keypadGetValue(void){
+	
+	uint8 LOC_COL=0;
+	uint8 LOC_ROW=0;
+	uint8 TEMP=0;
+	uint8 VALUE=0;
+	uint8 cols[4]={KEYPAD_COL1,KEYPAD_COL2,KEYPAD_COL3,KEYPAD_COL4};
+	uint8 rows[4]={KEYPAD_ROW1,KEYPAD_ROW2,KEYPAD_ROW3,KEYPAD_ROW4};
+		
+	for(LOC_COL=COL_INIT;LOC_COL<=COL_FINAL;LOC_COL++){
+		
+		DIO_setPinValue(KEYPAD_COL_PORT,cols[LOC_COL],DIO_PIN_LOW);
+		
+		for(LOC_ROW=ROW_INIT;LOC_ROW<=ROW_FINAL;LOC_ROW++){
+			
+			DIO_readPinValue(KEYPAD_ROW_PORT,rows[LOC_ROW],&TEMP);
+			
+			if(!TEMP){
+				
+				VALUE=keypadValues[LOC_COL][LOC_ROW];
+				
+				while(!TEMP){
+					DIO_readPinValue(KEYPAD_ROW_PORT,rows[LOC_ROW],&TEMP);
+				}
+				
+				_delay_ms(10);
+			}
+			
+		}
+		DIO_setPinValue(KEYPAD_COL_PORT,cols[LOC_COL],DIO_PIN_HIGH);
+	}
+	
+	return VALUE;
+};
+
