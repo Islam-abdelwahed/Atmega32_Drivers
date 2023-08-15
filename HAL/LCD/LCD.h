@@ -14,6 +14,6 @@ void LCD_WRITE_DATA(uint8 value);
 void LCD_GOTO(uint8 row,uint8 col);
 void LCD_WRITE_STRING(uint8* str);
 void LCD_CLR(void);
-
+void LCD_WIRTE_INTEGER(sint32 number);
 
 #endif /* LCD_H_ */
