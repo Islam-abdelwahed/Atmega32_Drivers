@@ -103,6 +103,30 @@ void LCD_WRITE_STRING(uint8* str){
 	}
 	
 };
+
+void LCD_WIRTE_INTEGER(sint32 number){
+
+sint32 y=1;
+
+if(number<0){
+LCD_WRITE_DATA('-');
+number*=-1;
+}
+
+while(number>0)
+{
+	y=((y*10)+(number%10));
+	number/=10;
+}
+
+while(y>1)
+{
+	LCD_WRITE_DATA(((y%10)+48));
+	y/=10;
+}
+
+}
+
 void LCD_CLR(void){
 	LCD_WRITE_CMD(0x01);
 };
