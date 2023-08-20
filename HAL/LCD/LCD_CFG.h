@@ -25,6 +25,12 @@
 
 #define LCD_MODE			4
 
+#define DISPLAY_OFF 0
+#define DISPLAY_ON 1
 
+#define CURSOR_OFF	0
+#define CURSOR_ON	1
+#define CURSOR_BLINK_OFF	3
+#define CURSOR_BLINK_ON		2
 
 #endif /* LCD_CFG_H_ */
