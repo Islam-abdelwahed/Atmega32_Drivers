@@ -15,6 +15,7 @@ void LCD_WRITE_CHAR(uint8 value);
 void LOCATE_CURSOR(uint8 row,uint8 col);
 void LCD_WRITE_STRING(uint8* str);
 void LCD_CLR(void);
+void LCD_WRITE_INTEGER(sint32 intgr);
 
 
 #endif /* LCD_H_ */

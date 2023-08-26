@@ -124,3 +124,21 @@ void LCD_Cursor(uint8_t B_B)
 	else if (B_B==3)B_LCDDispControl&=0b11111110;	// Cursor blink off
 	LCD_WRITE_CMD(B_LCDDispControl);
 }
+
+void LCD_WRITE_INTEGER(sint32 intgr){
+	sint32 y=1;
+	if(intgr<0){
+		LCD_WRITE_CHAR('-');
+		intgr*=-1;
+	}
+	while(intgr>0)
+	{
+		y=((y*10)+(intgr%10));
+		intgr/=10;
+	}
+	
+	while(y>1){
+		LCD_WRITE_CHAR(((y%10)+48));
+		y/=10;
+	}
+	};
