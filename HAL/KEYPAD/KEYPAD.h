@@ -3,16 +3,16 @@
 #define KEY_PAD_H_
 
 #include "KEPPAD_CFG.h"
-#define F_CPU 12000000
+#define F_CPU 16000000
 #include <util/delay.h>
 #include "STD.h"
 #include "DIO.h"
 
-#define COL_INIT 0
-#define COL_FINAL 3
+#define Col_INIT  7
+#define Col_FINAL 3
 
-#define ROW_INIT 0
-#define ROW_FINAL 3
+#define Row_INIT  5
+#define Row_FINAL 2
 
 
 void KEYPAD_INIT(void);
