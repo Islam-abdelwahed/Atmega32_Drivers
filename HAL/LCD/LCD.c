@@ -7,10 +7,9 @@ uint8_t B_LCDDispControl=0b00001000;
 void LCD_INIT(void){
 	#if LCD_MODE == 4
 	
-	PORTA|=0B00001100; DDRA|=0B00001100;
+	PORTA |= 0B00001100; DDRA |= 0B00001100;
 	PORTB|=0B00010111;DDRB|=0B00010111;
-	//DDRC|=0B00000000;
-	//DDRD|=0B00000000;
+	
 	
 	DIO_setPinDir(LCD_4BIT_CMD_PORT,LCD_RS_PIN,DIO_PIN_OUTPUT);
 	DIO_setPinDir(LCD_4BIT_CMD_PORT,LCD_E_PIN,DIO_PIN_OUTPUT);
@@ -46,14 +45,23 @@ void LCD_WRITE_CMD(uint8 cmd){
 	DIO_setPinValue(LCD_4BIT_CMD_PORT,LCD_E_PIN,DIO_PIN_LOW);
 	//DIO_setPinValue(LCD_4BIT_CMD_PORT,LCD_RW_PIN,DIO_PIN_LOW);
 	
-	PORTB=( (cmd >> 4) & 0x07) |( (cmd>>3) & 0x10) ;
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D4,((cmd>>4)&1));
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D5,((cmd>>5)&1));
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D6,((cmd>>6)&1));
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D7,((cmd>>7)&1));
+	//PORTB=( (cmd >> 4) & 0x07) |( (cmd>>3) & 0x10) ;
 	
 	DIO_setPinValue(LCD_4BIT_CMD_PORT,LCD_E_PIN,DIO_PIN_HIGH);
 	_delay_us(1);
 	DIO_setPinValue(LCD_4BIT_CMD_PORT,LCD_E_PIN,DIO_PIN_LOW);
 	_delay_us(1);
 
-	PORTB= (cmd & 0x07) |( (cmd<<1) & 0x10) ;
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D4,((cmd)&1));
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D5,((cmd>>1)&1));
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D6,((cmd>>2)&1));
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D7,((cmd>>3)&1));
+	
+	//PORTB= (cmd & 0x07) |( (cmd<<1) & 0x10) ;
 
 	DIO_setPinValue(LCD_4BIT_CMD_PORT,LCD_E_PIN,DIO_PIN_HIGH);
 	_delay_us(1);
@@ -71,14 +79,23 @@ void LCD_WRITE_CHAR(uint8 value){
 	DIO_setPinValue(LCD_4BIT_CMD_PORT,LCD_E_PIN,DIO_PIN_LOW);
 	//DIO_setPinValue(LCD_4BIT_CMD_PORT,LCD_RW_PIN,DIO_PIN_LOW);
 	
-	PORTB=( (value >> 4) & 0x07) |( (value>>3) & 0x10) ;
-
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D4,((value>>4)&1));
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D5,((value>>5)&1));
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D6,((value>>6)&1));
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D7,((value>>7)&1));
+	//PORTB=( (cmd >> 4) & 0x07) |( (cmd>>3) & 0x10) ;
+	
 	DIO_setPinValue(LCD_4BIT_CMD_PORT,LCD_E_PIN,DIO_PIN_HIGH);
 	_delay_us(1);
 	DIO_setPinValue(LCD_4BIT_CMD_PORT,LCD_E_PIN,DIO_PIN_LOW);
 	_delay_us(1);
+
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D4,((value)&1));
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D5,((value>>1)&1));
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D6,((value>>2)&1));
+	DIO_setPinValue(LCD_4BIT_DATA_PORT,LCD_D7,((value>>3)&1));
 	
-	PORTB= (value & 0x07) |( (value<<1) & 0x10) ;
+	//PORTB= (cmd & 0x07) |( (cmd<<1) & 0x10) ;
 
 	DIO_setPinValue(LCD_4BIT_CMD_PORT,LCD_E_PIN,DIO_PIN_HIGH);
 	_delay_us(1);
@@ -142,3 +159,12 @@ void LCD_WRITE_INTEGER(sint32 intgr){
 		y/=10;
 	}
 	};
+	
+	void LCD_DRAW_STRING(uint8* str){
+		int i=0;
+		while( str[i] != '\0' ){
+			LCD_WRITE_CHAR( str[i] );
+			_delay_ms(100);
+			i++;
+		}
+	}
